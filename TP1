@@ -1,0 +1,112 @@
+- **Logging:** use the `logging` module to record events at `DEBUG`, `INFO`,
+  `WARNING`, `ERROR`, or `CRITICAL` level.
+- **Breakpoints:** call `breakpoint()` to open the standard debugger, inspect
+  variables, and step through the program.
+- **Specific exception handling:** catch only the exceptions the program can
+  handle meaningfully. A bare `except:` can hide important events such as
+  `KeyboardInterrupt` and `SystemExit`.
+
+### Error-handling example
+
+```python
+raw_score = "eighty"
+
+try:
+    score = int(raw_score)
+except ValueError:
+    print("Enter a whole-number score.")
+else:
+    print(f"Score: {score}")
+```
+
+Try the example with both `"eighty"` and `"80"` to test the error and success
+paths. Error handling describes how the program responds to an expected
+problem; debugging is the process of finding and fixing an unexpected one.
+
+## 6. Habits That Improve Code Quality
+
+- Configure the editor to insert four spaces and display a line-length guide.
+- Format and lint code regularly instead of postponing all cleanup.
+- Review names, comments, and docstrings manually; automated tools cannot
+  judge whether an explanation is genuinely clear.
+- Use complete sentences in prose comments while preserving the exact spelling
+  of identifiers.
+- Test small functions as they are written.
+- Include normal, empty, and boundary cases, such as a score equal to the pass
+  mark.
+- Rerun relevant examples or tests after every behavioral change.
+
+## 7. Formatting and Linting with Ruff
+
+[Ruff](https://docs.astral.sh/ruff/) includes a formatter for code layout and a
+linter for identifying issues covered by enabled rules.
+
+Install Ruff in an activated Python virtual environment:
+
+```bash
+python -m pip install ruff
+```
+
+Useful commands:
+
+| Command | Purpose |
+| --- | --- |
+| `ruff check .` | Report lint problems in the current project. |
+| `ruff check --fix .` | Apply safe automatic fixes for enabled rules. |
+| `ruff format .` | Format the project's Python files. |
+| `ruff format --check .` | Check formatting without changing files. |
+
+Ruff's formatter defaults to a line length of 88 characters. A project that
+uses the 79-character convention can add the following configuration to
+`pyproject.toml`:
+
+```toml
+[tool.ruff]
+line-length = 79
+
+[tool.ruff.lint]
+extend-select = ["I", "N", "E501"]
+```
+
+In this example:
+
+- `I` enables import-sorting checks.
+- `N` enables naming checks.
+- `E501` reports lines that exceed the configured length.
+
+The formatter handles layout, while lint rules detect issues such as import
+order and naming. Some long lines still need manual editing, and human review
+is always needed for meaningful names, comments, and docstrings.
+
+### Editor integration
+
+An editor integration, such as the Ruff extension for Visual Studio Code, can
+show lint feedback while you type and format files when you save. Use the same
+project configuration in the editor and command line so both produce
+consistent results.
+
+## 8. Final Checklist
+
+Before considering a Python task complete, ask:
+
+- Are names descriptive and consistent?
+- Does each function have one clear responsibility?
+- Has repeated logic been moved into reusable functions?
+- Are important fixed values represented by named constants?
+- Do comments explain decisions rather than repeat the code?
+- Do reusable modules, classes, and functions have helpful docstrings?
+- Are imports, spacing, indentation, and blank lines consistent with PEP 8?
+- Have normal, empty, invalid, and boundary inputs been tested?
+- Have formatting and lint checks been run?
+
+## References
+
+- Personal class notes and a classmate's TP1 lecture summary
+- [PEP 8 – Style Guide for Python Code](https://peps.python.org/pep-0008/)
+- [PEP 257 – Docstring Conventions](https://peps.python.org/pep-0257/)
+- [Python tutorial: Classes](https://docs.python.org/3/tutorial/classes.html)
+- [Python tutorial: Modules](https://docs.python.org/3/tutorial/modules.html)
+- [Python tutorial: Errors and Exceptions](https://docs.python.org/3/tutorial/errors.html)
+- [Python Logging HOWTO](https://docs.python.org/3/howto/logging.html)
+- [Python built-in function: `breakpoint`](https://docs.python.org/3/library/functions.html#breakpoint)
+- [Ruff documentation](https://docs.astral.sh/ruff/)
