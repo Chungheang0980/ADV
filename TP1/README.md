@@ -1,13 +1,81 @@
-    pass
-```
+# Writing Clean and Readable Python
 
-Keyword arguments do not use spaces around `=`:
+This guide introduces essential Python concepts, clean-code practices,
+PEP 8 conventions, and practical debugging techniques. It is designed as a
+quick reference for writing code that is easy to understand, test, and
+maintain.
+
+## 1. Core Python Concepts
+
+Before focusing on style, it helps to understand the building blocks used in
+most Python programs.
+
+| Concept | Meaning | Example |
+| --- | --- | --- |
+| **Function** | A reusable block of code that performs a task. It can accept parameters and return a result. If it has no explicit `return`, it returns `None`. | `calculate_total(price, quantity)` |
+| **Variable** | A name that refers to a value or object. The value associated with the name can change. | `student_score = 75` |
+| **Method** | A function associated with a class or object. An instance method conventionally receives the object through `self`. | `student.greet()` |
+| **Class** | A blueprint that defines the data and behavior shared by a group of objects. | `class Student:` |
+| **Module** | A Python source file containing reusable functions, classes, or variables. | `math_helpers.py` |
+| **Package** | A collection of related modules organized under a common name. Regular packages contain `__init__.py`; namespace packages can omit it. | `utilities.math_helpers` |
+| **Constant** | A named value that is intended to remain unchanged. Python communicates this intention through uppercase naming rather than enforcing it. | `PASS_MARK = 50` |
+
+### Class, object, and method example
 
 ```python
-connect(port=8080)
+class Student:
+    """Represent a student in a simple example."""
+
+    def greet(self):
+        """Return a greeting for the student."""
+        return "Hello, welcome to class!"
+
+
+student = Student()
+print(student.greet())
 ```
 
-### Complete style example
+In this example:
+
+- `Student` is a class.
+- `student` refers to an object, or instance, of that class.
+- `greet()` is an instance method.
+- Calling `student.greet()` automatically passes `student` as `self`.
+
+## 2. What Makes Code Clean?
+
+Clean code makes its purpose easy to recognize. A reader should be able to
+understand what the program does without having to decode unclear names,
+duplicated logic, or deeply nested conditions.
+
+### Choose meaningful names
+
+Names should describe the value or operation they represent.
+
+```python
+# Unclear
+s = 75
+
+# Clear
+student_score = 75
+```
+
+Short names can still be useful when their meaning is obvious from a small
+context, but descriptive names are usually better for important data and
+reusable code.
+
+### Give each function one clear responsibility
+
+A function is easier to understand and test when it performs one focused task.
+If a function handles several unrelated jobs, divide it into smaller helper
+functions.
+
+### Avoid repeated logic
+
+Place repeated calculations or operations in a function. This reduces
+duplication and allows future corrections to be made in one location.
+
+### Replace unexplained values with named constants
 
 ```python
 PASS_MARK = 50
@@ -15,178 +83,14 @@ PASS_MARK = 50
 
 def has_passed(score):
     return score >= PASS_MARK
-
-
-student_score = 75
-print(has_passed(student_score))
 ```
 
-This example uses a meaningful constant, descriptive names, four-space
-indentation, blank lines, and consistent spacing. It prints `True` because the
-score meets the pass mark.
+`PASS_MARK` explains the role of `50` and makes the threshold easier to update.
 
-## 4. Useful Python Idioms
+### Explain decisions, not obvious syntax
 
-Python provides concise ways to express common conditions.
+Comments are most useful when they explain *why* a decision was made. Avoid
+comments that merely repeat what a clear line of code already says, and update
+comments whenever the related code changes.
 
-### Check for `None` with identity
-
-```python
-if result is None:
-    print("No result is available.")
-```
-
-Use `is None` or `is not None` instead of equality comparisons.
-
-### Check collections directly
-
-```python
-if not scores:
-    print("No scores are available.")
-```
-
-Empty strings, lists, tuples, and dictionaries are false in a condition.
-Non-empty collections are true.
-
-### Use Boolean values directly
-
-```python
-if has_passed:
-    print("Pass")
-
-if not has_passed:
-    print("Try again")
-```
-
-There is usually no need to compare a Boolean value with `True` or `False`.
-
-## 5. Debugging and Error Handling
-
-Debugging means finding the cause of unexpected behavior and correcting it.
-Python problems generally fall into three groups:
-
-- **Syntax errors:** the code does not follow Python's grammar.
-- **Runtime errors:** the program raises an exception while running.
-- **Logic errors:** the program runs but produces the wrong result.
-
-Common exceptions include:
-
-| Exception | Typical cause |
-| --- | --- |
-| `TypeError` | An operation receives an incompatible type. |
-| `KeyError` | A requested dictionary key does not exist. |
-| `IndexError` | A sequence index is outside the valid range. |
-| `ValueError` | A value has the correct general type but an invalid form. |
-
-### A practical debugging workflow
-
-1. **Reproduce the problem.** Run the program with the input that caused the
-   unexpected result.
-2. **Read the error carefully.** The final line normally shows the exception
-   type and message, while the traceback identifies relevant calls and files.
-3. **Reduce the search area.** Inspect the reported line, variable values,
-   types, and conditions. Test a small function independently when possible.
-4. **Correct the cause.** Make a focused change based on the evidence.
-5. **Test again.** Retry the original case, then test normal, empty, and
-   boundary inputs to check for regressions.
-
-### Helpful debugging tools
-
-- **Temporary output:** use `print()` to inspect values during a small
-  investigation, then remove temporary messages when finished.
-- **Logging:** use the `logging` module to record events at `DEBUG`, `INFO`,
-  `WARNING`, `ERROR`, or `CRITICAL` level.
-- **Breakpoints:** call `breakpoint()` to open the standard debugger, inspect
-  variables, and step through the program.
-- **Specific exception handling:** catch only the exceptions the program can
-  handle meaningfully. A bare `except:` can hide important events such as
-  `KeyboardInterrupt` and `SystemExit`.
-
-### Error-handling example
-
-```python
-raw_score = "eighty"
-
-try:
-    score = int(raw_score)
-except ValueError:
-    print("Enter a whole-number score.")
-else:
-    print(f"Score: {score}")
-```
-
-Try the example with both `"eighty"` and `"80"` to test the error and success
-paths. Error handling describes how the program responds to an expected
-problem; debugging is the process of finding and fixing an unexpected one.
-
-## 6. Habits That Improve Code Quality
-
-- Configure the editor to insert four spaces and display a line-length guide.
-- Format and lint code regularly instead of postponing all cleanup.
-- Review names, comments, and docstrings manually; automated tools cannot
-  judge whether an explanation is genuinely clear.
-- Use complete sentences in prose comments while preserving the exact spelling
-  of identifiers.
-- Test small functions as they are written.
-- Include normal, empty, and boundary cases, such as a score equal to the pass
-  mark.
-- Rerun relevant examples or tests after every behavioral change.
-
-## 7. Formatting and Linting with Ruff
-
-[Ruff](https://docs.astral.sh/ruff/) includes a formatter for code layout and a
-linter for identifying issues covered by enabled rules.
-
-Install Ruff in an activated Python virtual environment:
-
-```bash
-python -m pip install ruff
-```
-
-Useful commands:
-
-| Command | Purpose |
-| --- | --- |
-| `ruff check .` | Report lint problems in the current project. |
-| `ruff check --fix .` | Apply safe automatic fixes for enabled rules. |
-| `ruff format .` | Format the project's Python files. |
-| `ruff format --check .` | Check formatting without changing files. |
-
-Ruff's formatter defaults to a line length of 88 characters. A project that
-uses the 79-character convention can add the following configuration to
-`pyproject.toml`:
-
-```toml
-[tool.ruff]
-line-length = 79
-
-[tool.ruff.lint]
-extend-select = ["I", "N", "E501"]
-```
-
-In this example:
-
-- `I` enables import-sorting checks.
-- `N` enables naming checks.
-- `E501` reports lines that exceed the configured length.
-
-The formatter handles layout, while lint rules detect issues such as import
-order and naming. Some long lines still need manual editing, and human review
-is always needed for meaningful names, comments, and docstrings.
-
-### Editor integration
-
-An editor integration, such as the Ruff extension for Visual Studio Code, can
-show lint feedback while you type and format files when you save. Use the same
-project configuration in the editor and command line so both produce
-consistent results.
-
-## 8. Final Checklist
-
-Before considering a Python task complete, ask:
-
-- Are names descriptive and consistent?
-- Does each function have one clear responsibility?
-- Has repeated logic been moved into reusable functions?
-- Are important fixed values represented by named constants?
-- Do comments explain decisions rather than repeat the code?
+### Document reusable code
