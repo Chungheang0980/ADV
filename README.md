@@ -11,4 +11,4 @@ activities for the Advanced Programming subject.
 
 - Keep each activity on a separate branch.
 - Store each activity's files in its own dedicated folder.
-- merge activity work between branches when the subject ends.
+- merge activity work between branches when the subject ends..
